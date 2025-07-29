@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public", "api_private"] 
+}
+
+model UserAccount {
+  id             String   @id @default(uuid())
+  provider       String   // 'google' or 'facebook'
+  providerUserId String
+  email          String
+  name           String?   
+  familyName     String?   
+  displayName     String?   
+  createdAt      DateTime @default(now())
+  lastSignIn     DateTime @default(now())
+
+  userCredential UserCredential?
+  
+  @@unique([provider, providerUserId])
+  @@map("UserAccount")              // Optional: explicit table name
+  @@schema("public")
+}
+
+
+model UserCredential {
+  userId    String   @id
+  password  String
+  createdAt DateTime @default(now())
+  user      UserAccount @relation(fields: [userId], references: [id])
+
+  @@map("UserCredential")              // Optional: explicit table name
+  @@schema("api_private")         // 👈 This puts the model in the custom schema
+}

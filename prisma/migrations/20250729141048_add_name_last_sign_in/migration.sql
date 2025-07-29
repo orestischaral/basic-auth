@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "SocialAccount" ADD COLUMN     "familyName" TEXT,
+ADD COLUMN     "lastSignIn" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "name" TEXT;
