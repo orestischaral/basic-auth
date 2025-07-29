@@ -4,7 +4,7 @@ import { withAuth } from "../auth_utils/authMiddleware";
 const router = express.Router();
 
 router.get(
-  "/user/myProfile",
+  "/me",
   withAuth((req, res) => {
     return res.json({ user: "Profile User" });
   })

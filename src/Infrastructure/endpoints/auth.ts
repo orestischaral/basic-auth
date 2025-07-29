@@ -1,7 +1,7 @@
 // src/Infrastructure/endpoints/auth.ts
 import express from "express";
 import passport from "passport";
-import { generateToken } from "../auth_utils/jwtAuth";
+import { generateToken } from "../auth_utils/jwt";
 import { PrismaUserRepository } from "../repositories/PrismaUserRepository";
 import { RegisterUserUseCase } from "../../Application/useCases/RegisterUserUseCase";
 import { LoginUserUseCase } from "../../Application/useCases/LoginUserUseCase";

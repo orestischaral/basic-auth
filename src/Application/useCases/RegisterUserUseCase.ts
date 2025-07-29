@@ -1,6 +1,6 @@
 import { IUserRepository } from "../../Domain/IRepositories/IUserRepository";
 import { hashPassword } from "../../Infrastructure/auth_utils/password";
-import { generateToken } from "../../Infrastructure/auth_utils/jwtAuth";
+import { generateToken } from "../../Infrastructure/auth_utils/jwt";
 
 export class RegisterUserUseCase {
   constructor(private userRepository: IUserRepository) {}
