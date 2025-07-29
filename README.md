@@ -25,7 +25,7 @@ src/
 │
 ├── Infrastructure/
 │ ├── auth_utils/
-│ │ ├── jwt.ts
+│ │ ├── jwtAuth.ts
 │ │ └── password.ts
 │ │
 │ ├── middlewares/
