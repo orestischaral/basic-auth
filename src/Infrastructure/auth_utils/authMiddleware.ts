@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import redis from "../db_utils/redis";
 
 const JWT_SECRET = process.env.JWT_SECRET || "super-secret";
 
@@ -10,7 +11,7 @@ export interface AuthenticatedRequest extends Request {
 export function withAuth(
   handler: (req: AuthenticatedRequest, res: Response, next: NextFunction) => any
 ) {
-  return function (req: Request, res: Response, next: NextFunction) {
+  return async function (req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader?.startsWith("Bearer ")) {
@@ -20,6 +21,12 @@ export function withAuth(
     }
 
     const token = authHeader.split(" ")[1];
+
+    // ❌ Check if token is blacklisted
+    const isBlacklisted = await redis.get(`bl:${token}`);
+    if (isBlacklisted) {
+      return res.status(401).json({ error: "Token has been revoked" });
+    }
 
     try {
       const payload = jwt.verify(token, JWT_SECRET);

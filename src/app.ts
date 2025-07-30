@@ -4,9 +4,9 @@ import express from "express";
 import cors from "cors";
 import passport from "passport";
 import bodyParser from "body-parser";
-import authRoutes from "./BC_User_management/Infrastructure/endpoints/auth";
-import userRoutes from "./BC_User_management/Infrastructure/endpoints/user";
-import "./BC_User_management/Infrastructure/auth_utils/googleStrategy";
+import authRoutes from "./Infrastructure/endpoints/auth";
+import userRoutes from "./Infrastructure/endpoints/user";
+import "./Infrastructure/auth_utils/googleStrategy";
 
 const app = express();
 app.use(cors());
