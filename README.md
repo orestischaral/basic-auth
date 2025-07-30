@@ -4,6 +4,7 @@ This project implements a clean and scalable **authentication system** using:
 
 - **Node.js + Express**
 - **PostgreSQL + Prisma (multi-schema)**
+- **Redis**
 - **JWT-based auth (email/password)**
 - **Google OAuth login**
 - **Clean Architecture + Onion Architecture**
@@ -13,31 +14,46 @@ This project implements a clean and scalable **authentication system** using:
 ## 📁 Project Structure (Auth-Related Only)
 
 ```bash
-src/
-├── Domain/
-│ └── interfaces/
-│ └── IUserRepository.ts
+my-app/
+├── prisma/
+│   └── schema.prisma              # Prisma schema with multi-schema setup
 │
-├── Application/
-│ └── usecases/
-│ ├── RegisterUserUseCase.ts
-│ └── LoginUserUseCase.ts
+├── src/
 │
-├── Infrastructure/
-│ ├── auth_utils/
-│ │ ├── jwtAuth.ts
-│ │ └── password.ts
-│ │
-│ ├── middlewares/
-│ │ └── withAuth.ts
-│ │
-│ ├── endpoints/
-│ │ └── auth.ts
-│ │
-│ └── repositories/
-│ └── PrismaUserRepository.ts
+│   ├── Domain/                    # Core business rules (no dependencies)
+│   │   └── interfaces/
+│   │       └── IUserRepository.ts
 │
-├── index.ts
+│   ├── Application/               # Use cases / business logic orchestration
+│   │   └── useCases/
+│   │       ├── RegisterUserUseCase.ts
+│   │       └── LoginUserUseCase.ts
+│
+│   ├── Infrastructure/            # Implementations and integrations
+│   │
+│   │   ├── repositories/
+│   │   │   └── PrismaUserRepository.ts
+│   │
+│   │   ├── endpoints/
+│   │   │   └── auth.ts            # Routes for /auth/register, /login, /logout, /me
+│   │
+│   │   ├── middlewares/
+│   │   │   └── withAuth.ts        # JWT-protected route wrapper
+│   │
+│   │   ├── auth_utils/
+│   │   │   ├── jwt.ts             # JWT sign/verify helpers
+│   │   │   ├── password.ts        # Hash/compare with bcrypt
+│   │   │   └── googleStrategy.ts  # Passport strategy for Google OAuth
+│   │
+│   │   ├── db_utils/
+│   │   │   └── redis.ts           # Redis client instance
+│
+│   ├── index.ts                   # App bootstrap: dotenv, middlewares, routes
+│
+├── .env                           # JWT secret, Redis URL, Google creds, etc.
+├── tsconfig.json
+├── package.json
+
 ```
 
 ## 🧪 Auth Features Implemented
@@ -119,6 +135,42 @@ JWT_SECRET=your-super-secret
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 
+```
+
+### 🔒 JWT Logout with Redis Blacklist
+
+**🔚 Logging Out (POST /auth/logout)**
+
+This project uses **Redis** to implement secure logout functionality in a stateless JWT-based auth system.
+
+---
+
+### ✅ Why a Token Blacklist?
+
+Since JWTs are stateless and stored client-side, "logging out" requires server-side invalidation. We solve this by:
+
+- Adding **used tokens to a Redis blacklist**
+- Checking the blacklist on every request
+- Setting the **TTL based on token expiration**
+
+---
+
+### 🧱 Redis Setup
+
+1. **Install Redis:**
+
+```bash
+# macOS
+brew install redis && brew services start redis
+
+# or use Docker
+docker run --name redis-auth -p 6379:6379 redis
+```
+
+Install Redis client:
+
+```bash
+npm install ioredis
 ```
 
 ## 🧱 Prisma Schema Notes
