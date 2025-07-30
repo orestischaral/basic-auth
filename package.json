@@ -9,8 +9,8 @@
     "db-reset": "bash prisma/utils/db-reset.sh",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name",
-    "redis:start": "docker run --name redis-auth -p 6379:6379 redis",
-    "redis:rm": "docker rm redis-auth"
+    "redis-dev:start": "docker run --name redis-auth -p 6379:6379 redis",
+    "redis-dev:rm": "docker rm redis-auth"
   },
   "keywords": [],
   "author": "",

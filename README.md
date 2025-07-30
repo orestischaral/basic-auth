@@ -127,17 +127,7 @@ Returns:
 2. OAuth callback: /auth/google/callback
 3. Returns JWT as JSON
 
-## 🛠 .env Configuration
-
-```bash
-DATABASE_URL=postgres://user:pass@localhost:5432/mydb
-JWT_SECRET=your-super-secret
-GOOGLE_CLIENT_ID=...
-GOOGLE_CLIENT_SECRET=...
-
-```
-
-### 🔒 JWT Logout with Redis Blacklist
+## 🔒 JWT Logout with Redis Blacklist
 
 **🔚 Logging Out (POST /auth/logout)**
 
@@ -155,7 +145,7 @@ Since JWTs are stateless and stored client-side, "logging out" requires server-s
 
 ---
 
-### 🧱 Redis Setup
+## 🧱 Redis Setup
 
 1. **Install Redis:**
 
@@ -171,6 +161,17 @@ Install Redis client:
 
 ```bash
 npm install ioredis
+```
+
+## 🛠 .env Configuration
+
+```bash
+DATABASE_URL=postgres://user:pass@localhost:5432/mydb
+JWT_SECRET=your-super-secret
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+REDIS_URL=redis://localhost:6379
+
 ```
 
 ## 🧱 Prisma Schema Notes
